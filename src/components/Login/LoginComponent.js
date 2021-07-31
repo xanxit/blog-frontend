@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "../styles/sweet.css";
 
 function Login() {
-  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const HandleSubmit=(e)=>{
@@ -18,7 +16,8 @@ function Login() {
           // console.log(response.data);
           if (response.data) {
             //redirect to login page
-            history.push("/");
+            localStorage.setItem("userData", JSON.stringify(response.data));
+            window.location.href="/";
           }
         });
         

@@ -1,5 +1,5 @@
 const isAuthenticated = () => {
-  const user= localStorage.getItem("payload_name");
+  const user= localStorage.getItem("userData");
   if (user!= null) {
     return true;
   } else {

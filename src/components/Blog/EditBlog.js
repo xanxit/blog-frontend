@@ -77,15 +77,13 @@ export default function EditBlog() {
         });
         axios
           .delete("https://myways-backend.herokuapp.com/api/deleteblog", {
-            title: title,
-            image: image,
-            content: content,
+            title: title
           })
           .then((response) => {
             console.log(response.data);
             if (response.data) {
               //redirect to login page
-              history.push("/blog");
+              history.push("/");
             }
           })
           .catch((error) => {

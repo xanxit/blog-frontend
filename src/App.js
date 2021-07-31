@@ -9,7 +9,7 @@ import Bloglist from "./components/Blog/Bloglist";
 import BlogPage from "./components/Blog/BlogPage";
 import CreateBlog from "./components/Blog/CreateBlog";
 import EditBlog from "./components/Blog/EditBlog";
-// import CreateBlog from './components/Blog/CreateBlog';
+import PrivateRoute from "./protected";
 
 function App() {
   return (
@@ -20,10 +20,10 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/" component={Bloglist} />
-          <Route exact path="/create" component={CreateBlog}/>
-          <Route exact path="/blog/create" component={BlogEditor} />
+          <PrivateRoute exact path="/create" component={CreateBlog}/>
+          <PrivateRoute exact path="/blog/create" component={BlogEditor} />
           <Route exact path="/blog/:id" component={BlogPage} />
-          <Route exact path="/edit" component={EditBlog}/>
+          <PrivateRoute exact path="/edit" component={EditBlog}/>
         </Switch>
         <FooterComponent />
       </BrowserRouter>

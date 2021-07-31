@@ -39,7 +39,7 @@ export default function BlogEditor() {
           console.log(response.data);
           if (response.data) {
             //redirect to login page
-            history.push("/login");
+            history.push("/");
           }
         })
         .catch((error) => {

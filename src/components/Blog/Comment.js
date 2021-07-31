@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 export default function Comment() {
+
  const [comments, setComments] = React.useState([]);
    let { id } = useParams();
         React.useEffect(() => {
@@ -23,9 +24,14 @@ export default function Comment() {
               <p className="text-sm mt-2 font-semibold text-gray-900 truncate">
               {comments.map((item, i) => {
       return (
-        <option key={i} value={item}>
-          {item}
-        </option>
+        <div key={i} value={item}>
+            <div class="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+        
+        <p class="text-sm">
+          {item}<br/>
+        </p>
+        </div>
+        </div>
       );
     })}
               </p>
