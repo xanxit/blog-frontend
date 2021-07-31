@@ -1,191 +1,173 @@
-import React, { useState } from "react";
+import React,{useState}from "react";
+import { Link,useHistory } from "react-router-dom";
+import axios from "axios";
 import swal from "sweetalert";
 import "../styles/sweet.css";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
 
 export default function Register() {
-  //define usehistory
   const history = useHistory();
-  //define state
+  //set usestates for the firstname lastname email password and confirm password
+  const [firstname,setFirstname] =useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [name, setName] = useState("");
-  //six onChange function
-  const onChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
-  const onChangePassword = (event) => {
-    setPassword(event.target.value);
-  };
-  const onChangePasswordConfirm = (event) => {
-    setPasswordConfirm(event.target.value);
-  };
-  const onChangeName = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const [confirmpassword, setConfirmPassword] = useState("");
+  const HandleSubmit=(e)=>{
     e.preventDefault();
-    if (password !== passwordConfirm) {
-      swal({
-        title: "Password does not match",
-        text: "",
-        icon: "error",
-        buttons: {
-          confirm: { text: "Okay", className: "sweet-warning" },
-        },
-      });
-    } else if (!name || !email || !password || !passwordConfirm) {
-      swal({
-        title: "Please fill all required fields",
-        text: "",
-        icon: "warning",
-        buttons: {
-          confirm: { text: "Okay", className: "sweet-warning" },
-        },
-      });
-    } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-      swal({
-        title: "Enter valid email address",
-        text: "",
-        icon: "warning",
-        buttons: {
-          confirm: { text: "Okay", className: "sweet-warning" },
-        },
-      });
-    } else {
-      swal({
-        title: "Registration Successful",
-        text: "You can login with the unique ID sent to your email!",
-        icon: "success",
-        buttons: {
-          confirm: { text: "Okay", className: "sweet-warning" },
-        },
-      });
+    //check if the password and confirm password is same
+    if(password!==confirmpassword){
+      swal("Password and confirm password is not same");
+    }else{
+      //if password and confirm password is same then call the register function
+      axios
+        .post("https://myways-backend.herokuapp.com/api/register", {
+          email: email,
+          password: password,
+          confirmpassword: confirmpassword,
+          firstname: firstname,
+          lastname: lastname,
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data) {
+            //redirect to login page
+            history.push("/login");
+            swal({
+              title: "Registration Successful",
+              icon: "success",
+              buttons: {
+                confirm: { text: "Okay", className: "sweet-warning" },
+              },
+            });
+          } else {
+            swal({
+              title: "Registration Failed",
+              text: response.json,
+              icon: "error",
+              buttons: {
+                confirm: { text: "Okay", className: "sweet-warning" },
+              },
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          swal({
+            title: "Registration Failed",
+            text: "",
+            icon: "error",
+            buttons: {
+              confirm: { text: "Okay", className: "sweet-warning" },
+            },
+          });
+        });
     }
-    //set all the states to empty string
-    setEmail("");
-    setPassword("");
-    setPasswordConfirm("");
-    setName("");
-
-    //write axios to post the values of register to server
-    const config = {
-        headers:{
-            'Content-Type': 'application/json',
-        }
-    }
-
-    // axios
-    //   .post("http://localhost:1000/api/register", {
-    //     email: email,
-    //     password: password,
-    //     name: name,
-    //     confirmpassword: passwordConfirm,
-    //   },config)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     if (response.data) {
-    //       //redirect to login page
-    //       history.push("/login");
-    //       swal({
-    //         title: "Registration Successful",
-    //         text: "You can login with the unique ID sent to your email!",
-    //         icon: "success",
-    //         buttons: {
-    //           confirm: { text: "Okay", className: "sweet-warning" },
-    //         },
-    //       });
-    //     } else {
-    //       swal({
-    //         title: "Registration Failed",
-    //         text: response.json,
-    //         icon: "error",
-    //         buttons: {
-    //           confirm: { text: "Okay", className: "sweet-warning" },
-    //         },
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     swal({
-    //       title: "Registration Failed",
-    //       text: "",
-    //       icon: "error",
-    //       buttons: {
-    //         confirm: { text: "Okay", className: "sweet-warning" },
-    //       },
-    //     });
-    //   });
-  };
+  }
 
   return (
-    <div className="w-full flex flex-wrap items-center justify-center">
-      <div className="w-full pt-40 lg:w-1/2">
-        <div className="flex flex-col justify-center md:justify-start my-auto py-8 px-8 md:px-24 lg:px-32">
-          <p className="text-center text-3xl font-bold text-gray-600">
-            Register Here!
-          </p>
-          <form className="flex flex-col" onSubmit="event.preventDefault();">
-            <div className="flex flex-col pt-4">
+    <div className="grid min-h-screen place-items-center">
+      <div className="w-11/12 p-12 bg-white sm:w-8/12 md:w-1/2 lg:w-5/12">
+        <form className="mt-6">
+          <div className="flex justify-between gap-3">
+            <span className="w-1/2">
+              <label
+                htmlFor="firstname"
+                className="block text-xs font-semibold text-gray-600 uppercase"
+              >
+                Firstname
+              </label>
               <input
+                id="firstname"
                 type="text"
-                id="name"
-                placeholder="Enter your Full Name*"
-                onChange={onChangeName}
-                className="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-200 mt-1 leading-tight focus:outline-none focus:shadow-outline"
-                required={true}
+                name="firstname"
+                placeholder="John"
+                autoComplete="given-name"
+                onChange={(e) => setFirstname(e.target.value)}
+                className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+                required
               />
-            </div>
-            <div className="flex flex-col pt-4">
+            </span>
+            <span className="w-1/2">
+              <label
+                htmlFor="lastname"
+                className="block text-xs font-semibold text-gray-600 uppercase"
+              >
+                Lastname
+              </label>
               <input
-                type="email"
-                id="email"
-                placeholder="Enter your Email Id*"
-                onChange={onChangeEmail}
-                className="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-200 mt-1 leading-tight focus:outline-none focus:shadow-outline"
-                required={true}
+                id="lastname"
+                type="text"
+                name="lastname"
+                placeholder="Doe"
+                onChange={(e) => setLastname(e.target.value)}
+                autoComplete="family-name"
+                className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+                required
               />
-            </div>
-            <div className="flex flex-col pt-4">
-              <input
-                type="password"
-                id="password"
-                placeholder="Enter your Password*"
-                onChange={onChangePassword}
-                required={true}
-                className="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-200 mt-1 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-
-            <div className="flex flex-col pt-4">
-              <input
-                type="password"
-                id="cpassword"
-                placeholder="Confirm Password*"
-                onChange={onChangePasswordConfirm}
-                className="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-200 mt-1 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <button
-              type="submit"
-              value="Log In"
-              //   onClick={handleSubmit}
-              className="bg-black hover:bg-yellow-400 text-white font-bold rounded-lg text-lg p-2 mt-8"
-            >
-              Register
-            </button>
-          </form>
-        </div>
+            </span>
+          </div>
+          <label
+            for="email"
+            className="block mt-2 text-xs font-semibold text-gray-600 uppercase"
+          >
+            E-mail
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="john.doe@company.com"
+            autoComplete="email"
+            className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+            required
+          />
+          <label
+            for="password"
+            className="block mt-2 text-xs font-semibold text-gray-600 uppercase"
+          >
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="********"
+            autoComplete="new-password"
+            className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+            required
+          />
+          <label
+            for="password-confirm"
+            className="block mt-2 text-xs font-semibold text-gray-600 uppercase"
+          >
+            Confirm password
+          </label>
+          <input
+            id="password-confirm"
+            type="password"
+            name="password-confirm"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="********"
+            autoComplete="new-password"
+            className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+            required
+          />
+          <button
+            type="submit"
+            onClick={HandleSubmit}
+            className="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-gray-700 shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none"
+          >
+            Sign up
+          </button>
+          <Link to="/login">
+            <p className="justify-between inline-block mt-4 text-xs text-gray-500 cursor-pointer hover:text-black">
+              Already registered?
+            </p>
+          </Link>
+        </form>
       </div>
-      <img
-        className="w-full lg:w-1/2 px-12 pt-12"
-        src="http://localhost:3001/assets/images/welcome.svg"
-        alt="welcome"
-      />
     </div>
   );
 }

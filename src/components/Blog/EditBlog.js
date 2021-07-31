@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React,{useState} from 'react'
 import swal from "sweetalert";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-export default function BlogEditor() {
+export default function EditBlog() {
   //onchange function for title, image, content
   const history = useHistory();
   const [title, setTitle] = useState("");
@@ -22,7 +22,7 @@ export default function BlogEditor() {
       });
     } else {
       swal({
-        title: "Your Blog has been Published!",
+        title: "Your Blog has been updated!",
         text: "",
         icon: "success",
         buttons: {
@@ -30,7 +30,7 @@ export default function BlogEditor() {
         },
       });
       axios
-        .post("https://myways-backend.herokuapp.com/api/createBlog", {
+        .put("https://myways-backend.herokuapp.com/api/blog", {
           title: title,
           image: image,
           content: content,
@@ -39,13 +39,13 @@ export default function BlogEditor() {
           console.log(response.data);
           if (response.data) {
             //redirect to login page
-            history.push("/login");
+            history.push("/blog");
           }
         })
         .catch((error) => {
           console.log(error);
           swal({
-            title: "Registration Failed",
+            title: "Uodate Failed",
             text: "",
             icon: "error",
             buttons: {
@@ -55,9 +55,59 @@ export default function BlogEditor() {
         });
     }
   };
+  const onDelete =(e)=>{
+      e.preventDefault();
+      if (!title) {
+        swal({
+          title: "Please fill the title of the blog",
+          text: "",
+          icon: "warning",
+          buttons: {
+            confirm: { text: "Okay", className: "sweet-warning" },
+          },
+        });
+      } else {
+        swal({
+          title: "Your Blog has been updated!",
+          text: "",
+          icon: "success",
+          buttons: {
+            confirm: { text: "Okay", className: "sweet-warning" },
+          },
+        });
+        axios
+          .delete("https://myways-backend.herokuapp.com/api/deleteblog", {
+            title: title,
+            image: image,
+            content: content,
+          })
+          .then((response) => {
+            console.log(response.data);
+            if (response.data) {
+              //redirect to login page
+              history.push("/blog");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            swal({
+              title: "Update Failed",
+              text: "",
+              icon: "error",
+              buttons: {
+                confirm: { text: "Okay", className: "sweet-warning" },
+              },
+            });
+          });
+      }
+
+  }
   return (
     <div className="grid min-h-screen place-items-center">
       <div className="w-11/12 p-12 bg-white sm:w-9/12 md:w-1/2 lg:w-7/12">
+        <p className="text-center">
+          Please Type the full title of the blog for updation
+        </p>
         <form className="mt-6">
           <label
             for="title"
@@ -107,13 +157,26 @@ export default function BlogEditor() {
             className="block w-full h-80 p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
             required
           />
-          <button
-            type="submit"
-            onClick={onSubmit}
-            className="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-gray-700 shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none"
-          >
-            Publish
-          </button>
+          <div className="flex flex-wrap justify-evenly">
+            <div>
+              <button
+                type="submit"
+                onClick={onSubmit}
+                className="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-gray-700 shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none"
+              >
+                Update
+              </button>
+            </div>
+            <div>
+              <button
+                type="submit"
+                onClick={onDelete}
+                className="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-red-500 shadow-lg focus:outline-none hover:bg-red-700 hover:shadow-none"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
