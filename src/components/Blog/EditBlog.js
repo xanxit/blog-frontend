@@ -39,7 +39,7 @@ export default function EditBlog() {
           console.log(response.data);
           if (response.data) {
             //redirect to login page
-            history.push("/blog");
+            history.push("/");
           }
         })
         .catch((error) => {

@@ -19,7 +19,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
-          <Route exact path="/blog" component={Bloglist} />
+          <Route exact path="/" component={Bloglist} />
           <Route exact path="/create" component={CreateBlog}/>
           <Route exact path="/blog/create" component={BlogEditor} />
           <Route exact path="/blog/:id" component={BlogPage} />
