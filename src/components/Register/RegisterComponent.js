@@ -17,7 +17,16 @@ export default function Register() {
     //check if the password and confirm password is same
     if(password!==confirmpassword){
       swal("Password and confirm password is not same");
-    }else{
+    }else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      swal({
+        title: "Enter valid email address",
+        text: "",
+        icon: "warning",
+        buttons: {
+          confirm: { text: "Okay", className: "sweet-warning" },
+        },
+      });
+    } else {
       //if password and confirm password is same then call the register function
       axios
         .post("https://myways-backend.herokuapp.com/api/register", {
